@@ -6,10 +6,13 @@ Discription: This class keeps points,time, turn, and determins winner of the gam
 Starting player will be determined randomly.
 """
 import RB_Graph as G
+from RB_Agent import *
 import sys
+import matplotlib.pyplot as plt
 import time as t
 import random
 import argparse
+import json
 
 class RBGame(object):
     def __init__(self,n,r,t):
@@ -21,7 +24,7 @@ class RBGame(object):
         self.current_round = 1
         self.point = [0,0]#red,blue point
         self.turn =''
-        
+
     def setNode(self,n):
         self.G = G.Graph(n,0.1)
         
@@ -44,6 +47,7 @@ class RBGame(object):
             self.turn = 'blue'
     
     def make_play(self):
+        self.G.printGraph_node_only()
         print "It is "+self.turn+"'s turn."
         print "Select a node or type \"-1\" to skip yout turn"
         counter = t.time()
@@ -78,7 +82,7 @@ class RBGame(object):
                 
     def start_game(self):
         print "<Starting game>"
-        while (self.current_round <= self.rounds):
+        while (self.current_round <= self.rounds and len(self.G.getValidMoves()) != 0):
             print "\n\nRound: "+ str(self.current_round)
             if self.make_play():
                 self.current_round+=1
@@ -87,13 +91,13 @@ class RBGame(object):
                     self.turn = "blue"
                 else:
                     self.turn = "red"
-                self.G.printGraph_node_only()
+                #self.G.printGraph_node_only()
             else:
                 print self.turn+ " lost"
                 self.G.printGraph()
                 return False
-        self.G.printGraph()
-        print "RESULT  of the game:"
+
+        print "RESULT of the game:"
         print "                    Red: "+ str(self.point[0])
         print "                    Blue: "+ str(self.point[1])
         if self.point[0]>self.point[1]:
@@ -102,29 +106,37 @@ class RBGame(object):
             print "Blue won!"
         else:
             print "It is tie game."
+        self.G.printGraph()
                 
 if __name__=="__main__":
+    graph_data = json.load(open('graph.json'))
+    time = graph_data["timeLimit"]
+    numCount = graph_data["nodeCount"]
+    roundCount = graph_data["roundCount"]
     game = RBGame(100,10,20) #node number, round, time
-    
+    game.point = game.G.readGraph(graph_data["nodes"])
+    print(game.point)
+
+
     #parsing the arguments
-    parser = argparse.ArgumentParser(description='Setting Red and Blue game.')
-    parser.add_argument('-n',type=int, 
-                       help='set node number (default: 100 nodes)')
-    parser.add_argument('-r',type=int, 
-                        help='set round number (default: 10 round)')
-    parser.add_argument('-t',type=int, 
-                        help='set time limit (default: 20 second)') 
-    args = parser.parse_args()
-    if args.n:
-        game.setNode(args.n)
-    if args.r:
-        game.setRound(args.r)
-    if args.t:
-        game.setTime(args.t)
-        
-        
-    
-    #chose who start first
+    # parser = argparse.ArgumentParser(description='Setting Red and Blue game.')
+    # parser.add_argument('-n',type=int,
+    #                    help='set node number (default: 100 nodes)')
+    # parser.add_argument('-r',type=int,
+    #                     help='set round number (default: 10 round)')
+    # parser.add_argument('-t',type=int,
+    #                     help='set time limit (default: 20 second)')
+    # args = parser.parse_args()
+    # if args.n:
+    #     game.setNode(args.n)
+    # if args.r:
+    #     game.setRound(args.r)
+    # if args.t:
+    #     game.setTime(args.t)
+    #
+    #
+    #
+    # #chose who start first
     game.rand_start()
     #game start
     game.start_game()

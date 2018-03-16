@@ -1,12 +1,13 @@
 """
 <Red and Blue game>
-Author: Jihoo Brian Park, William Hsu
+Author: Jihoo Brian Park
 Class: Graph Class
 Discription: This generates Erdos-Renyi graph.
 Default color is grey. when nodes are marked by player, graph updates the node color.
 """
 import networkx as nx
 import sys
+import numpy
 import matplotlib.pyplot as plt
 
 
@@ -34,6 +35,41 @@ class Graph(object):
                 valid_moves.append(node)
 
         return valid_moves
+    def readGraph(self, graph_info):
+        self.graph = nx.Graph()
+        nodes = []
+        edges = []
+        num_red = 0
+        num_blue = 0
+        self.attrs = {}
+        for x in range(len(graph_info)):
+            id = int(graph_info[x]["id"])
+            nodes.append(id)
+            self.attrs[x] = {'number':id,'color':int(graph_info[x]['color'])}
+            for adj in range(len(graph_info[x]["adj"])):
+                edges.append((id,int(graph_info[x]["adj"][adj])))
+                #print(graph_info[x]["adj"][0])
+            #edges.append((x,graph_info[x]))
+        for node in self.attrs.values():
+            node_color = ''
+            num_color = node.get('color')
+            if(num_color == 0):
+                node_color = 'grey'
+            if(num_color == 1):
+                num_red += 1
+                node_color = 'red'
+            elif(num_color == 2):
+                num_blue += 1
+                node_color = 'blue'
+            node['color'] = node_color
+        #print(nodes)
+        #print(edges)
+        #print(self.attrs)
+        self.graph.add_nodes_from(nodes)
+        self.graph.add_edges_from(edges)
+        self.pos=nx.spring_layout(self.graph)
+        nx.set_node_attributes(self.graph, self.attrs)
+        return ([num_red, num_blue])
 
     def mark(self, player, node):
         """
@@ -50,7 +86,9 @@ class Graph(object):
             return(0,0)
             
         for nodes in self.graph.neighbors(node):
-            if (self.attrs[nodes]['color'] != player) and (self.attrs[nodes]['color'] != 'grey'):
+            if(self.attrs[nodes]['color'] == player):
+                continue
+            if (self.attrs[nodes]['color'] != 'grey'):
                 subtracted_nodes +=1
             self.attrs[nodes]['color'] = player
             colored_nodes+=1
@@ -59,7 +97,7 @@ class Graph(object):
         
     def printTable(self):
         """
-        print 2D table
+                print 2D table
         """
         adjacency_matrix = []
         for node in self.graph.nodes():
@@ -72,7 +110,8 @@ class Graph(object):
                     row.append(0)
             print(row)
             adjacency_matrix.append(row)
-        
+
+
     def printGraph(self):
         """
         print Graph
@@ -102,10 +141,11 @@ class Graph(object):
     def get_graph(self):
         return self.graph
 if __name__=="__main__":
-    
-    n=50 # 50 nodes
-    p=0.2 # prob
-    G = Graph(n,p)
-    print G.mark('red',1)
-    print G.mark('blue',0)
-    G.printGraph_node_only()
+    g = Graph(5, 0.3)
+    g.printTable()
+    # n=50 # 50 nodes
+    # p=0.2 # prob
+    # G = Graph(n,p)
+    # print G.mark('red',1)
+    # print G.mark('blue',0)
+    # G.printGraph_node_only()
