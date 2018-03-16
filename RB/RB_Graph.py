@@ -1,6 +1,6 @@
 """
 <Red and Blue game>
-Author: Jihoo Brian Park
+Author: Jihoo Brian Park, William Hsu
 Class: Graph Class
 Discription: This generates Erdos-Renyi graph.
 Default color is grey. when nodes are marked by player, graph updates the node color.
@@ -61,6 +61,18 @@ class Graph(object):
         """
         print 2D table
         """
+        adjacency_matrix = []
+        for node in self.graph.nodes():
+            row = []
+            row2 = []
+            for neighbor in range(self.nodeNum):
+                if(neighbor in self.graph.neighbors(node)):
+                    row.append(1)
+                else:
+                    row.append(0)
+            print(row)
+            adjacency_matrix.append(row)
+        
     def printGraph(self):
         """
         print Graph
