@@ -21,7 +21,20 @@ class Graph(object):
         for num in range(self.nodeNum):
             self.attrs[num] = {'number':num,'color':'grey'}
         nx.set_node_attributes(self.graph,self.attrs)
-    
+
+    def getValidMoves(self):
+        """
+        Get the list of nodes that have not been colored yet.
+        :return: a list of node numbers that are available to be chosen as the next move
+        """
+        valid_moves = []
+        gamestate = nx.get_node_attributes(self.graph, 'color')
+        for node in gamestate:
+            if gamestate.get(node) == 'grey':
+                valid_moves.append(node)
+
+        return valid_moves
+
     def mark(self, player, node):
         """
         mark node that player has chosen.
@@ -52,24 +65,28 @@ class Graph(object):
         """
         print Graph
         """
+        plt.clf()
         labels = nx.get_node_attributes(self.graph,'number')
         colors = nx.get_node_attributes(self.graph,'color')
         nx.draw(self.graph,self.pos,node_color = colors.values(),with_lables=True,node_size = 250)
         nx.draw_networkx_labels(self.graph,self.pos,labels,font_size=8)
         plt.axis('off')
         plt.show()
+        #plt.draw()
         
     def printGraph_node_only(self):
         """
         print Graph
         """
+        plt.clf()
         labels = nx.get_node_attributes(self.graph,'number')
         colors = nx.get_node_attributes(self.graph,'color')
         print colors
         nx.draw_networkx_nodes(self.graph,self.pos,node_color = colors.values(),with_lables=True,node_size = 250)
         nx.draw_networkx_labels(self.graph,self.pos,labels,font_size=8)
         plt.axis('off')
-        plt.show()      
+        plt.pause(0.1)
+        #plt.pause(0.001)
     def get_graph(self):
         return self.graph
 if __name__=="__main__":
