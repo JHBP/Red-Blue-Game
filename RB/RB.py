@@ -115,7 +115,6 @@ if __name__=="__main__":
     roundCount = graph_data["roundCount"]
     game = RBGame(100,10,20) #node number, round, time
     game.point = game.G.readGraph(graph_data["nodes"])
-    print(game.point)
 
 
     #parsing the arguments

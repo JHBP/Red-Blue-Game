@@ -78,11 +78,14 @@ class Graph(object):
         """
         colored_nodes = 0
         subtracted_nodes = 0
+        if(node not in self.graph.node):
+            sys.stderr.write('node does not exist')
+            return (0, 0)
         if self.attrs[node]['color'] == 'grey':
             self.attrs[node]['color'] = player
             colored_nodes+=1
         else:
-            sys.stderr.write('node does not exist or taken')
+            sys.stderr.write('node has been taken')
             return(0,0)
             
         for nodes in self.graph.neighbors(node):
