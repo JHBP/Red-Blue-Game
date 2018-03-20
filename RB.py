@@ -32,6 +32,7 @@ server communication:
 class RBGame(object):
     def __init__(self,n,r,t):
         self.G = G.Graph(n,0.1)
+        self.gui = False
         self.node = n
         self.prob = 0.1
         self.time = t
@@ -44,6 +45,8 @@ class RBGame(object):
         self.gameMode = 0 # 1 == cvc, 2 == pvc, 3 == pvp
         self.player1 = Agent.computer("red")
         self.player2 = Agent.computer("blue")
+    def read_in_graph(self,filename):
+        self.G = G.Graph.readGraph()
     def setPlayer(self,gameMode):
         if gameMode == 1:
             self.gameMode = 1
@@ -62,7 +65,8 @@ class RBGame(object):
     
     def setNode(self,n):
         self.G = G.Graph(n,0.1)
-        
+    def setGUI(self,OnOff):
+        self.gui = OnOff     
     def setRound(self,r):
         self.rounds = r
         
@@ -161,12 +165,12 @@ class RBGame(object):
                     self.turn = "blue"
                 else:
                     self.turn = "red"
-                self.G.printGraph_node_only()
+                if self.gui:
+                    self.G.printGraph_node_only()
             else:
                 print self.turn+ " lost"
                 self.G.printGraph()
                 return False
-        self.G.printGraph()
         print "RESULT  of the game:"
         print "                    Red: "+ str(self.point[0])
         print "                    Blue: "+ str(self.point[1])
@@ -176,6 +180,7 @@ class RBGame(object):
             print "Blue won!"
         else:
             print "It is tie game."
+        self.G.printGraph()
             
     def pvc(self):
         print "<Starting game>"
@@ -188,12 +193,12 @@ class RBGame(object):
                     self.turn = "blue"
                 else:
                     self.turn = "red"
-                self.G.printGraph_node_only()
+                if self.gui:
+                    self.G.printGraph_node_only()
             else:
                 print self.turn+ " lost"
                 self.G.printGraph()
                 return False                
-        self.G.printGraph()
         print "RESULT  of the game:"
         print "                    Red: "+ str(self.point[0])
         print "                    Blue: "+ str(self.point[1])
@@ -203,7 +208,8 @@ class RBGame(object):
             print "Blue won!"
         else:
             print "It is tie game."
-            
+        self.G.printGraph()
+        
     def cvc(self): 
         print "<Starting game>"
         while (self.current_round <= self.rounds):
@@ -215,12 +221,13 @@ class RBGame(object):
                     self.turn = "blue"
                 else:
                     self.turn = "red"
-                self.G.printGraph_node_only()
+                if self.gui:
+                    self.G.printGraph_node_only()
             else:
                 print self.turn+ " lost"
+                
                 self.G.printGraph()
                 return False
-        self.G.printGraph()
         print "RESULT  of the game:"
         print "                    Red: "+ str(self.point[0])
         print "                    Blue: "+ str(self.point[1])
@@ -230,10 +237,12 @@ class RBGame(object):
             print "Blue won!"
         else:
             print "It is tie game."            
-
+        self.G.printGraph()
 if __name__=="__main__":  
     #parsing the arguments
     parser = argparse.ArgumentParser(description='Setting Red and Blue game.')
+    parser.add_argument('-g',type=bool,
+                        help='Show GUI  (default: False)')    
     parser.add_argument('-n',type=int,
                        help='set node number (default: 100 nodes)')
     parser.add_argument('-r',type=int, 
@@ -241,13 +250,14 @@ if __name__=="__main__":
     parser.add_argument('-t',type=int, 
                         help='set time limit (default: 20 second)') 
     parser.add_argument('-p',type=int, 
-                        help='set number of player(s). Default: 0(computer vs computer)')     
+                        help='set number of human player(s). Max 2. Default: 0(computer vs computer)')     
     args = parser.parse_args()
     
     game = RBGame(100,10,20) #node number, round, time
     #chose who start first
     game.rand_start()
-    
+    if args.g:
+        game.setGUI(args.g)    
     if args.n:
         game.setNode(args.n)
     if args.r:
