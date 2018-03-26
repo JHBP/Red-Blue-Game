@@ -118,7 +118,7 @@ class Graph(object):
             file.write("node: " + str(node) + " \tneighbors: " + str(adj) + "\n")
         file.close()
 
-    def printGraphJson(self, game, file):
+    def printGraphJson(self, game, status, file):
         file.write("{\n")
         file.write('\t"rounds": ' + str(game.rounds) + ",\n")
         file.write('\t"time": ' + str(game.time) + ",\n")
@@ -141,12 +141,27 @@ class Graph(object):
         file.write('\n\t],\n')
         file.write('\t"colors": [')
         first = True
+        color_num = 0
         for node in range(self.nodeNum):
-            if (first):
-                file.write(str(0))
-                first = False
+            if(status):
+                color = self.attrs[node].get('color')
+                if (color == "grey"):
+                    color_num = 0
+                elif (color == "red"):
+                    color_num = 1
+                else:
+                    color_num = 2
+                if(first):
+                    file.write(str(color_num))
+                    first = False
+                else:
+                    file.write(', ' + str(color_num))
             else:
-                file.write(', ' + str(0))
+                if (first):
+                    file.write(str(0))
+                    first = False
+                else:
+                    file.write(', ' + str(0))
         file.write(']\n}')
         file.close()
 

@@ -105,16 +105,7 @@ class RBGame(object):
                 return self.player1
             else:
                 return self.player2
-    # def start_game(self):
-    #     if self.gameMode == 0:
-    #         print "Starting computer vs computer"
-    #         self.cvc()
-    #     elif self.gameMode == 1:
-    #         print "Starting human vs computer"
-    #         self.pvc()
-    #     else:
-    #         print "Starting human vs human"
-    #         self.pvp()
+
 
     def make_play(self,player):
         print "It is "+self.turn_player+"'s turn."
@@ -131,7 +122,7 @@ class RBGame(object):
                 selected_node = player.run(self.G,player.color)
                 if selected_node == 'print':
                     output = open('graphStatus.json', 'w')
-                    self.G.printGraphJson(self,output)
+                    self.G.printGraphJson(self, True, output)
                     print 'Graph status printed to "graph_status.json", now choose your move.'
                     output.close()
                 elif selected_node == "-1":
@@ -196,7 +187,7 @@ class RBGame(object):
         final_output = open('graph_details.txt', 'w')
         final_json = open('game_graph.json','w')
         self.G.printGraphDetails(self, final_output)
-        self.G.printGraphJson(self,final_json)
+        self.G.printGraphJson(self, False, final_json)
         final_output.close()
         print '\n\nLook at "graph_details.txt" for more information on this game'
         self.G.printGraph(True, True)
@@ -226,7 +217,7 @@ if __name__=="__main__":
         game.rand_start()
 
     else:
-        game = RBGame(1100,10,30)
+        game = RBGame(50,10,30)
         game.rand_start()
         if args.n:
             game.setNode(args.n)

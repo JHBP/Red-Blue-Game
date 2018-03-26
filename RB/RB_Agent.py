@@ -215,13 +215,15 @@ class Minimax():
 
 def CustomAlgorithm(g, player):
     """
-    colors are dictionary of dictionary.
+    colors is the dictionary of dictionary.
     Key is a node number and value is a color of the node.
-    You can access your color by self.getColor()
-    return string of integer by using str() function
+    valid_moves contains the uncolored nodes of the graph.
+    You can access your color from the 'player' parameter
+    return string of an integer by using str() function
     check the given algorithms (random,greedy) for references..
     """
     colors = nx.get_node_attributes(g.get_graph(), 'color')
+    valid_moves = g.getValidMoves()
     # Todo: Write your code here!
     return
 
