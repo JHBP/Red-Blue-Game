@@ -1,8 +1,8 @@
 """
 <Red and Blue game>
-Author: Jihoo Brian Park
+Author: Jihoo Brian Park, William Hsu
 Class: RB Class (main)
-Discription: This class keeps points,time, turn, and determins winner of the game.
+Description: This class keeps points, time, turn, and determines the winner of the game.
 color of the player will be determined randomly.
 starting player is always red.
 """
@@ -11,7 +11,6 @@ starting player is always red.
 javascript to networkx - later.
 argument to set which algo to use
 need to thread timeout function
-Question: if times up, is it autometic loss?
 """
 import RB_Graph as G
 import RB_Agent as Agent
@@ -22,13 +21,9 @@ import random
 import argparse
 
 """
-Make coin flip optional
-Setting customized graph. maybe use json format to read?
-Documentation(README)
 server communication: 
 1. server will only send graph at the beginning.
 2. move will be updated on the server and client machine.
-
 """
 class RBGame(object):
     def __init__(self,n,r,t):
@@ -53,28 +48,28 @@ class RBGame(object):
         if gameMode == 1:
             self.gameMode = 1
             self.player1 = Agent.human(self.assigned[0])
-            self.player2 = Agent.computer(self.assigned[1])            
+            self.player2 = Agent.computer(self.assigned[1])
         elif gameMode ==2:
             self.gameMode = 2
             self.player1 = Agent.human(self.assigned[0])
-            self.player2 = Agent.human(self.assigned[1])            
+            self.player2 = Agent.human(self.assigned[1])
         else:
             self.gameMode = 0
             self.player1 = Agent.computer(self.assigned[0])
-            self.player2 = Agent.computer(self.assigned[1])            
-            
+            self.player2 = Agent.computer(self.assigned[1])
+
         print "Player 1 is "+self.assigned[0]+" and Player 2 is "+self.assigned[1]
-    
+
     def setNode(self,n):
         self.G = G.Graph(n,0.1)
     def setGUI(self,OnOff):
-        self.gui = OnOff     
+        self.gui = OnOff
     def setRound(self,r):
         self.rounds = r
-        
+
     def setTime(self,t):
         self.time = t
-        
+
     def print_game_info(self):
         print "This game is ",
         if self.gameMode ==0:
@@ -86,14 +81,14 @@ class RBGame(object):
         print "It is round: "+str(self.current_turn)+"and is " +self.turn_player+"'s turn."
         print "Current result  of the game:"
         print "                    Red: "+ str(self.point[0])
-        print "                    Blue: "+ str(self.point[1])        
-        
+        print "                    Blue: "+ str(self.point[1])
+
     def update_point(self,r,b):
         self.point[0]+=r
         self.point[1]+=b
-        
+
     def rand_start(self):
-        
+
         #randomely assign red or blue to players
         if random.choice([True,False]):
             self.assigned = ["red","blue"]
@@ -110,7 +105,17 @@ class RBGame(object):
                 return self.player1
             else:
                 return self.player2
-            
+    # def start_game(self):
+    #     if self.gameMode == 0:
+    #         print "Starting computer vs computer"
+    #         self.cvc()
+    #     elif self.gameMode == 1:
+    #         print "Starting human vs computer"
+    #         self.pvc()
+    #     else:
+    #         print "Starting human vs human"
+    #         self.pvp()
+
     def make_play(self,player):
         print "It is "+self.turn_player+"'s turn."
         print 'Select a node or type \"-1\" to skip your turn. Type "print" to retrieve current status of graph'
@@ -135,7 +140,7 @@ class RBGame(object):
                     self.score_list.append((self.point[0],self.point[1]))
                     return True
                 elif selected_node.isdigit() == False:
-                    print "Not a valid input. "+str(self.time-(t.time()-counter))+" seconds left!"
+                    print "Invalid move, please input a node number. "+str(self.time-(t.time()-counter))+" seconds left!"
             result = self.G.mark(self.turn_player,int(selected_node))
             if result ==(0,0):
                 print "\nCannot select: "+str(int(selected_node))+". "
@@ -152,9 +157,9 @@ class RBGame(object):
                     self.update_point(-result[1],result[0])
                 self.score_list.append((self.point[0],self.point[1]))
                 return True
-                
 
-            
+
+
     def start_game(self):
         if self.gameMode == 0:
             print "Starting computer vs computer"
@@ -178,7 +183,7 @@ class RBGame(object):
                 print self.turn_player + " lost"
                 self.G.printGraph()
                 return False
-        print "RESULT  of the game:"
+        print "RESULTS of the game:"
         print "                    Red: "+ str(self.point[0])
         print "                    Blue: "+ str(self.point[1])
         if self.point[0]>self.point[1]:
@@ -195,18 +200,18 @@ class RBGame(object):
         print '\n\nLook at "graph_details.txt" for more information on this game'
         self.G.printGraph()
 
-if __name__=="__main__":  
+if __name__=="__main__":
     #parsing the arguments
     parser = argparse.ArgumentParser(description='Setting Red and Blue game.')
     parser.add_argument('-g',type=bool,
                         help='Show GUI  (default: True)')
     parser.add_argument('-n',type=int,
                        help='set node number (default: 20 nodes)')
-    parser.add_argument('-r',type=int, 
+    parser.add_argument('-r',type=int,
                         help='set round limit (default: 10 rounds)')
-    parser.add_argument('-t',type=int, 
+    parser.add_argument('-t',type=int,
                         help='set time limit (default: 30 second)')
-    parser.add_argument('-p',type=int, 
+    parser.add_argument('-p',type=int,
                         help='set number of human player(s). Max 2. Default: 0(computer vs computer)')
     parser.add_argument('-f', type=str,
                         help='Input a graph as a json file')
@@ -220,7 +225,7 @@ if __name__=="__main__":
         game.rand_start()
 
     else:
-        game = RBGame(50,10,30)
+        game = RBGame(20,10,30)
         game.rand_start()
         if args.n:
             game.setNode(args.n)
@@ -234,4 +239,3 @@ if __name__=="__main__":
         game.setPlayer(args.p)
     #game start
     game.start_game()
-
