@@ -75,9 +75,12 @@ def GreedyAlgorithm2(g, player):
 """
 Minimax algorithm
 Autor: William Hsu
-In development
 """
-"""
+
+def MinimaxAlgorithm(g, player):
+    m = Minimax(2)
+    return str(m.getAction(g,player))
+
 class Minimax():
     def __init__(self, depth):
         self.index = 0
@@ -89,6 +92,8 @@ class Minimax():
     def getAction(self, g, player):
         current_depth = 0
         current_agent = 0
+        alpha = -float("inf")
+        beta = float("inf")
         value = -float('inf')
         self.player = player
         if player == 'red':
@@ -108,18 +113,23 @@ class Minimax():
         chosen_moves = []
         gameinfo = [gamestate, valid_moves, current_agent]
         for move in valid_moves:
-            new_value = self.value(self.generateSuccessor(move,gameinfo), current_agent + 1, current_depth)
-            #print(str(move) + " move and value " + str(new_value))
+            #print(str(move))
+            new_value = self.value(self.generateSuccessor(move,gameinfo), current_agent + 1, current_depth, alpha, beta)
+            #print(self.player + " : " + str(move) + " move and value " + str(new_value))
             if value < new_value:
                 chosen_moves = []
                 chosen_moves.append(move)
                 value = new_value
             elif value == new_value:
                 chosen_moves.append(move)
+            if value > alpha:
+                alpha = value
+            if value >= beta:
+                return eval
         return random.choice(chosen_moves)
 
 
-    def value(self, gameinfo, current_agent, current_depth):
+    def value(self, gameinfo, current_agent, current_depth, alpha, beta ):
         if current_agent > 1:
             current_depth += 1
             current_agent = 0
@@ -127,30 +137,38 @@ class Minimax():
             return self.evaluate(gameinfo[0])
 
         if current_agent == 0:
-            return self.max_value(gameinfo, current_agent, current_depth)
+            return self.max_value(gameinfo, current_agent, current_depth, alpha, beta)
         else:
-            return self.min_value(gameinfo, current_agent, current_depth)
+            return self.min_value(gameinfo, current_agent, current_depth, alpha ,beta)
 
-    def max_value(self, gameinfo,current_agent, current_depth):
+    def max_value(self, gameinfo,current_agent, current_depth, alpha, beta):
         if current_depth >= self.depth or len(gameinfo[1]) == 0:
             return self.evaluate(gameinfo[0])
         value = -float("inf")
         valid_moves = gameinfo[1]
         for move in valid_moves:
-            new_value = self.value(self.generateSuccessor(move,gameinfo), current_agent + 1, current_depth)
+            new_value = self.value(self.generateSuccessor(move,gameinfo), current_agent + 1, current_depth, alpha, beta)
             if value < new_value:
                 value = new_value
+            if value > alpha:
+                alpha = value
+            if value > beta:
+                return value
         return value
 
-    def min_value(self, gameinfo, current_agent, current_depth):
+    def min_value(self, gameinfo, current_agent, current_depth, alpha, beta):
         if current_depth >= self.depth or len(gameinfo[1]) == 0:
             return self.evaluate(gameinfo[0])
         value = float("inf")
         valid_moves = gameinfo[1]
         for move in valid_moves:
-            new_value = self.value(self.generateSuccessor(move,gameinfo), current_agent + 1, current_depth)
+            new_value = self.value(self.generateSuccessor(move,gameinfo), current_agent + 1, current_depth, alpha, beta)
             if value > new_value:
                 value = new_value
+            if value < beta:
+                beta = value
+            if value < alpha:
+                return value
         return value
 
     def evaluate(self, gamestate):
@@ -165,9 +183,7 @@ class Minimax():
             return redcount - bluecount
         else:
             return bluecount - redcount
-    
     def generateSuccessor(self, move, gameinfo):
-        #print("orig")
         gamestate = copy.deepcopy(gameinfo[0])
         valid_moves = set(gameinfo[1])
         agent = int(gameinfo[2])
@@ -181,17 +197,10 @@ class Minimax():
             if (gamestate[node] == 'grey'):
                 valid_moves.remove(node)
             gamestate[node] = player
-            return [gamestate, valid_moves, agent+1]
+        return [gamestate, valid_moves, agent+1]
   
 
 
-
-
-
-def MinimaxAlgorithm(g, player):
-    m = Minimax(2)
-    return str(m.getAction(g,player))
-"""
 def CostomAlgorithm(g,player):
     """
     colors are dictionary of dictionary.
