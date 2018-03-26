@@ -6,9 +6,6 @@ import RB_Graph as G
 import random
 import copy
 
-#TODO: need to fix return type from node to string of number
-#MiniMax has to be in function type not class type
-
 """
 " This is the file one needs to modify.
 " One will be able to write there own algorithm under costom_algorithem.
@@ -28,6 +25,7 @@ def RandomAlgorithm(g, player):
     return str(random.choice(g.getValidMoves()))
 """
 Simple Greedy Algorithm that looks for the node with the most amount of neighboring nodes.
+Autor: William Hsu
 """
 def GreedyAlgorithm(g, player):
     valid_moves = g.getValidMoves()
@@ -47,8 +45,9 @@ def GreedyAlgorithm(g, player):
 
 """
 Greedy Algorithm that considers the amount of nodes gained and the amount of nodes stolen from the opponent
+Autor: William Hsu
 """
-def SmartGreedyAlgorithm(g, player):
+def GreedyAlgorithm2(g, player):
     valid_moves = g.getValidMoves()
     chosen_moves = []
     gamestate = nx.get_node_attributes(g.graph, 'color')
@@ -75,6 +74,9 @@ def SmartGreedyAlgorithm(g, player):
     return str(random.choice(chosen_moves))
 """
 Minimax algorithm
+Autor: William Hsu
+In development
+"""
 """
 class Minimax():
     def __init__(self, depth):
@@ -163,6 +165,7 @@ class Minimax():
             return redcount - bluecount
         else:
             return bluecount - redcount
+    
     def generateSuccessor(self, move, gameinfo):
         #print("orig")
         gamestate = copy.deepcopy(gameinfo[0])
@@ -188,6 +191,7 @@ class Minimax():
 def MinimaxAlgorithm(g, player):
     m = Minimax(2)
     return str(m.getAction(g,player))
+"""
 def CostomAlgorithm(g,player):
     """
     colors are dictionary of dictionary.
@@ -199,9 +203,9 @@ def CostomAlgorithm(g,player):
     colors = nx.get_node_attributes(g.get_graph(),'color')
     #Todo: Write your code here!
     return 
-"""
-Agent types
-"""
+
+
+"-------------------------Agent types------------------------"
 class human(object):
     def __init__(self,color):
         self.color = color
@@ -215,7 +219,7 @@ class human(object):
 class computer(object):
     def __init__(self,color):
         self.color = color
-        self.algorithm = Minimax(5)
+        self.algorithm = RandomAlgorithm
         self.makeSelection = False
     
     def getColor(self):
@@ -231,9 +235,9 @@ class computer(object):
         else:
             print "Choose algorithm to use:"
             print "1. Random selection"
-            print "2. Greedy Algorithm"
-            print "3. Smart Greedy Algorithm"
-            print "4. Minimax Algorithm"
+            print "2. Greedy Algorithm (most neighboring nodes)"
+            print "3. Greedy Algorithm2 (most score)"
+            print "4. Minimax Algorithm (in development... )"
             print "5. Costom Algorithm"
             """
             YOU MAY NEED TO ADD MORE PRINT
@@ -248,7 +252,7 @@ class computer(object):
             elif select == 2 :
                 self.algorithm = GreedyAlgorithm       
             elif select == 3 :
-                self.algorithm = SmartGreedyAlgorithm
+                self.algorithm = GreedyAlgorithm2
             elif select == 4 :
                 self.algorithm = MinimaxAlgorithm
             elif select == 5 :

@@ -142,6 +142,7 @@ class Graph(object):
         nx.draw_networkx_labels(self.graph,self.pos,labels,font_size=8)
         plt.axis('off')
         plt.pause(0.1)    
+    
     def get_graph(self):
         return self.graph
     

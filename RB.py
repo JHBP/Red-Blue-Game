@@ -19,6 +19,7 @@ import sys
 import time as t
 import random
 import argparse
+import json
 
 """
 Make coin flip optional
@@ -31,12 +32,12 @@ server communication:
 """
 class RBGame(object):
     def __init__(self,n,r,t):
-        self.G = G.Graph(n,0.1)
         self.gui = False
         self.node = n
         self.prob = 0.1
         self.time = t
         self.rounds = r
+        self.G = G.Graph(n,0.1)
         self.current_round = 1
         self.point = [0,0]#red,blue point
         self.turn ='red'
@@ -45,8 +46,14 @@ class RBGame(object):
         self.gameMode = 0 # 1 == cvc, 2 == pvc, 3 == pvp
         self.player1 = Agent.computer("red")
         self.player2 = Agent.computer("blue")
+        
     def read_in_graph(self,filename):
-        self.G = G.Graph.readGraph()
+        graph_data = json.load(open(filename))
+        self.time = float(graph_data["timeLimit"])
+        self.node = int(graph_data["nodeCount"])
+        self.rounds = int(graph_data["roundCount"])
+        self.point = game.G.readGraph(graph_data["nodes"])    
+        
     def setPlayer(self,gameMode):
         if gameMode == 1:
             self.gameMode = 1
@@ -64,7 +71,10 @@ class RBGame(object):
         print "Player 1 is "+self.assigned[0]+" and Player 2 is "+self.assigned[1]
     
     def setNode(self,n):
-        self.G = G.Graph(n,0.1)
+        self.G = G.Graph(n,self.prob)
+    def setProb(self,p):
+        self.prob = p
+        self.G = G.Graph(self.node,self.prob)
     def setGUI(self,OnOff):
         self.gui = OnOff     
     def setRound(self,r):
@@ -241,31 +251,41 @@ class RBGame(object):
 if __name__=="__main__":  
     #parsing the arguments
     parser = argparse.ArgumentParser(description='Setting Red and Blue game.')
+    parser.add_argument('-i',type=str,
+                        help='import graph json file  (default: None)')       
     parser.add_argument('-g',type=bool,
                         help='Show GUI  (default: False)')    
     parser.add_argument('-n',type=int,
-                       help='set node number (default: 100 nodes)')
+                       help='set node number (default: 100 nodes, has to be higher then 16)')
+    parser.add_argument('-p',type=float, 
+                        help='set probability of connection between nodes (default: 0.1)')    
     parser.add_argument('-r',type=int, 
                         help='set round number (default: 10 round)')
     parser.add_argument('-t',type=int, 
                         help='set time limit (default: 20 second)') 
-    parser.add_argument('-p',type=int, 
+    parser.add_argument('-np',type=int, 
                         help='set number of human player(s). Max 2. Default: 0(computer vs computer)')     
+    
+    
     args = parser.parse_args()
     
     game = RBGame(100,10,20) #node number, round, time
     #chose who start first
     game.rand_start()
+    if args.i:
+        game.read_in_graph(args.i)
     if args.g:
         game.setGUI(args.g)    
     if args.n:
         game.setNode(args.n)
+    if args.p:
+        game.setProb(args.p)
     if args.r:
         game.setRound(args.r)
     if args.t:
         game.setTime(args.t)
-    if args.p:
-        game.setPlayer(args.p)
+    if args.np:
+        game.setPlayer(args.np)
         
     #game start
     game.start_game()
