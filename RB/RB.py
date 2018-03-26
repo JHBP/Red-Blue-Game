@@ -131,7 +131,7 @@ class RBGame(object):
                 selected_node = player.run(self.G,player.color)
                 if selected_node == 'print':
                     output = open('graphStatus.json', 'w')
-                    self.G.printGraphJson(self,output,False)
+                    self.G.printGraphJson(self,output)
                     print 'Graph status printed to "graph_status.json", now choose your move.'
                     output.close()
                 elif selected_node == "-1":
@@ -167,7 +167,8 @@ class RBGame(object):
             print "Starting human vs computer"
         else:
             print "Starting human vs human"
-        self.G.printGraph_node_only()
+        if self.gui:
+            self.G.printGraph(False, False)
         while ((self.current_turn+1)/2 <= self.rounds and len(self.G.getValidMoves()) != 0):
             print "\n\nRound: "+ str((self.current_turn+1)/2)
             if self.make_play(self.whosTurn()):
@@ -178,10 +179,10 @@ class RBGame(object):
                 else:
                     self.turn_player = "red"
                 if self.gui:
-                    self.G.printGraph_node_only()
+                    self.G.printGraph(False, False)
             else:
                 print self.turn_player + " lost"
-                self.G.printGraph()
+                #self.G.printGraph()
                 return False
         print "RESULTS of the game:"
         print "                    Red: "+ str(self.point[0])
@@ -198,12 +199,12 @@ class RBGame(object):
         self.G.printGraphJson(self,final_json)
         final_output.close()
         print '\n\nLook at "graph_details.txt" for more information on this game'
-        self.G.printGraph()
+        self.G.printGraph(True, True)
 
 if __name__=="__main__":
     #parsing the arguments
     parser = argparse.ArgumentParser(description='Setting Red and Blue game.')
-    parser.add_argument('-g',type=bool,
+    parser.add_argument('-g',type=str,
                         help='Show GUI  (default: True)')
     parser.add_argument('-n',type=int,
                        help='set node number (default: 20 nodes)')
@@ -225,7 +226,7 @@ if __name__=="__main__":
         game.rand_start()
 
     else:
-        game = RBGame(20,10,30)
+        game = RBGame(1100,10,30)
         game.rand_start()
         if args.n:
             game.setNode(args.n)
@@ -233,9 +234,12 @@ if __name__=="__main__":
             game.setRound(args.r)
         if args.t:
             game.setTime(args.t)
+
     if args.g:
-        game.setGUI(args.g)
+        if(args.g == "False"):
+            game.setGUI(False)
     if args.p:
+        print(str(args.p))
         game.setPlayer(args.p)
     #game start
     game.start_game()

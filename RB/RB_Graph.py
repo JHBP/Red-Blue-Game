@@ -110,7 +110,7 @@ class Graph(object):
         file.write("Red nodes: " + str(red_nodes) + "\n")
         file.write("Blue nodes: " + str(blue_nodes) + "\n")
         file.write("Neutral nodes: " + str(grey_nodes))
-        file.write('\n\n\nGame Graph: \n\nTotal number of nodes: \n' + str(self.nodeNum) + '\n')
+        file.write('\n\n\nGame Graph: \n\nTotal number of nodes: ' + str(self.nodeNum) + '\n\n')
         for node in range(self.nodeNum):
             adj = []
             for neighbor in self.graph.neighbors(node):
@@ -194,11 +194,9 @@ class Graph(object):
             print(row)
             adjacency_matrix.append(row)
 
-    def printGraph(self):
-        """
-        print Graph
-        """
-        plt.clf()
+    def printGraph(self, show_edge, final):
+        if(not final):
+            plt.clf()
         labels = nx.get_node_attributes(self.graph, 'number')
         colors = nx.get_node_attributes(self.graph, 'color')
         for node in colors:
@@ -206,30 +204,53 @@ class Graph(object):
                 colors[node] = 'lightcoral'
             if (colors[node] == 'blue'):
                 colors[node] = 'skyblue'
-        nx.draw(self.graph, self.pos, node_color=colors.values(), with_lables=True, node_size=250)
+        if(show_edge):
+            nx.draw(self.graph, self.pos, node_color=colors.values(), with_lables=True, node_size=250)
+        else:
+            nx.draw_networkx_nodes(self.graph, self.pos, node_color=colors.values(), with_lables=True, node_size=250)
         nx.draw_networkx_labels(self.graph, self.pos, labels, font_size=8)
         plt.axis('off')
-        plt.show()
+        if(not final):
+            plt.pause(0.1)
+        else:
+            plt.show()
 
-    # plt.draw()
-
-    def printGraph_node_only(self):
-        """
-        print Graph
-        """
-        plt.clf()
-        labels = nx.get_node_attributes(self.graph, 'number')
-        colors = nx.get_node_attributes(self.graph, 'color')
-        # print colors
-        for node in colors:
-            if (colors[node] == 'red'):
-                colors[node] = 'lightcoral'
-            if (colors[node] == 'blue'):
-                colors[node] = 'skyblue'
-        nx.draw_networkx_nodes(self.graph, self.pos, node_color=colors.values(), with_lables=True, node_size=250)
-        nx.draw_networkx_labels(self.graph, self.pos, labels, font_size=8)
-        plt.axis('off')
-        plt.pause(0.1)
+    # def printGraph(self):
+    #     """
+    #     print Graph
+    #     """
+    #     plt.clf()
+    #     labels = nx.get_node_attributes(self.graph, 'number')
+    #     colors = nx.get_node_attributes(self.graph, 'color')
+    #     for node in colors:
+    #         if (colors[node] == 'red'):
+    #             colors[node] = 'lightcoral'
+    #         if (colors[node] == 'blue'):
+    #             colors[node] = 'skyblue'
+    #     nx.draw(self.graph, self.pos, node_color=colors.values(), with_lables=True, node_size=250)
+    #     nx.draw_networkx_labels(self.graph, self.pos, labels, font_size=8)
+    #     plt.axis('off')
+    #     plt.show()
+    #
+    # # plt.draw()
+    #
+    # def printGraph_node_only(self):
+    #     """
+    #     print Graph
+    #     """
+    #     plt.clf()
+    #     labels = nx.get_node_attributes(self.graph, 'number')
+    #     colors = nx.get_node_attributes(self.graph, 'color')
+    #     # print colors
+    #     for node in colors:
+    #         if (colors[node] == 'red'):
+    #             colors[node] = 'lightcoral'
+    #         if (colors[node] == 'blue'):
+    #             colors[node] = 'skyblue'
+    #     nx.draw_networkx_nodes(self.graph, self.pos, node_color=colors.values(), with_lables=True, node_size=250)
+    #     nx.draw_networkx_labels(self.graph, self.pos, labels, font_size=8)
+    #     plt.axis('off')
+    #     plt.pause(0.1)
 
     def get_graph(self):
         return self.graph

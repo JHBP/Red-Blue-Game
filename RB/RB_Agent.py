@@ -14,7 +14,7 @@ import copy
 " Graph is RB_Graph format and player is in string.
 " Player will be either "red" or "blue"
 " Return type has to be node of graph.
-" If there are multiple Algorithms that has been added, 
+" If there are multiple algorithms that has been added, 
 " run" function under "computer" class must be modified accordingly.
 """
 
