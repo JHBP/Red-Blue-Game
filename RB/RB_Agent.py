@@ -8,21 +8,18 @@ import copy
 
 """
 " This is the file one needs to modify.
-" One will be able to write there own algorithm under costom_algorithem.
-" Feel free to make multiple costume Algorithm.
-" Parameter for the algorithem are graph and player.
-" Graph is RB_Graph format and player is in string.
-" Player will be either "red" or "blue"
-" Return type has to be node of graph.
+" One will be able to write there own algorithm under custom_algorithem.
+" Feel free to make multiple custom algorithms.
+" Parameters for the algorithm are graph and player.
+" Graph is RB_Graph format and player is the string of the player color.
+" Return type has to be the string of a node number
 " If there are multiple algorithms that has been added, 
-" run" function under "computer" class must be modified accordingly.
+" 'run' function under 'computer' class must be modified accordingly.
 """
 
 """
 Random algorithm that makes a move randomly
 """
-
-
 def RandomAlgorithm(g, player):
     return str(random.choice(g.getValidMoves()))
 
@@ -30,8 +27,6 @@ def RandomAlgorithm(g, player):
 """
 Simple Greedy Algorithm that looks for the node with the most amount of neighboring nodes.
 """
-
-
 def GreedyNodesAlgorithm(g, player):
     valid_moves = g.getValidMoves()
     chosen_moves = []
@@ -52,8 +47,6 @@ def GreedyNodesAlgorithm(g, player):
 """
 Greedy Algorithm that considers the amount of nodes gained and the amount of nodes stolen from the opponent
 """
-
-
 def GreedyPointsAlgorithm(g, player):
     valid_moves = g.getValidMoves()
     chosen_moves = []
@@ -84,8 +77,6 @@ def GreedyPointsAlgorithm(g, player):
 """
 Minimax algorithm
 """
-
-
 def MinimaxAlgorithm(g, player):
     m = Minimax(2)
     return str(m.getAction(g, player))
@@ -235,6 +226,7 @@ Agent types
 
 class human(object):
     def __init__(self, color):
+        self.name = "Human"
         self.color = color
 
     def getColor(self):
@@ -247,21 +239,19 @@ class human(object):
 class computer(object):
     def __init__(self, color):
         self.color = color
-        self.algorithm = Minimax(5)
+        self.name = None
+        self.algorithm = None
         self.makeSelection = False
 
     def getColor(self):
         return self.color
 
     def run(self, graph, color):
-        # write which algo to run
-        """
-        change it to your algorithm you want to run
-        """
+        # Choose which algo to run
         if self.makeSelection:
             return self.algorithm(graph, color)
         else:
-            print "Choose algorithm to use:"
+            print "Choose an algorithm to use:"
             print "1. Random selection"
             print "2. Greedy Nodes Algorithm"
             print "3. Greedy Points Algorithm"
@@ -282,28 +272,22 @@ class computer(object):
                     select = int(select)
                 if select == 1:
                     self.algorithm = RandomAlgorithm
+                    self.name = "Random Algorithm"
                 elif select == 2:
                     self.algorithm = GreedyNodesAlgorithm
+                    self.name = "Greedy Nodes Algorithm"
                 elif select == 3:
                     self.algorithm = GreedyPointsAlgorithm
+                    self.name = "Greedy Points Algorithm"
                 elif select == 4:
                     self.algorithm = MinimaxAlgorithm
+                    self.name = "Minimax Algorithm"
+                ### Add more statements when you implement more algorithms
                 # elif select == 5 :
                 #     self.algorithm = CustomAlgorithm
                 else:
                     valid_choice = False
                     print("Invalid choice of algorithm")
-            """
-            YOU MAY NEED TO ADD MORE elif statement
-            """
-            # elif select == 6 :
-            #    self.algorithm = CustomAlgorithm2
-            # elif select == 7 :
-            #    self.algorithm = CustomAlgorithm3
-            # elif select == 8 :
-            #    self.algorithm = CustomAlgorithm4
-            # elif select == 9 :
-            #    self.algorithm = CustomAlgorithm5
             self.makeSelection = True
             return self.algorithm(graph, color)
 

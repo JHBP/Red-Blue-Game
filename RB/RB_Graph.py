@@ -7,14 +7,9 @@ Default color is grey. when nodes are marked by player, graph updates the node c
 """
 import networkx as nx
 import sys
-import numpy
 import matplotlib.pyplot as plt
 
-# TODO
-"""
-constant graph showing
-2D table
-"""
+
 
 
 class Graph(object):
@@ -42,6 +37,7 @@ class Graph(object):
 
         return valid_moves
 
+    #Read a dictionary object from the json file to create graph
     def readGraph(self, graph_data):
         self.graph.clear()
         nodes = []
@@ -73,6 +69,7 @@ class Graph(object):
         nx.set_node_attributes(self.graph, self.attrs)
         return (num_red, num_blue)
 
+    #Game details printed to a file at the end of the game
     def printGraphDetails(self, game, file):
         file.write(
             'If you want to play again using the same graph, use the contents of "game_graph.json" file as an input file\n\n')
@@ -118,6 +115,7 @@ class Graph(object):
             file.write("node: " + str(node) + " \tneighbors: " + str(adj) + "\n")
         file.close()
 
+    #Print the graph json format
     def printGraphJson(self, game, status, file):
         file.write("{\n")
         file.write('\t"rounds": ' + str(game.rounds) + ",\n")
@@ -192,23 +190,6 @@ class Graph(object):
         nx.set_node_attributes(self.graph, self.attrs)
         return (colored_nodes, subtracted_nodes)
 
-    def printTable(self):
-        """
-        print 2D table
-        print 2D table
-        """
-        adjacency_matrix = []
-        for node in self.graph.nodes():
-            row = []
-            row2 = []
-            for neighbor in range(self.nodeNum):
-                if (neighbor in self.graph.neighbors(node)):
-                    row.append(1)
-                else:
-                    row.append(0)
-            print(row)
-            adjacency_matrix.append(row)
-
     def printGraph(self, show_edge, final):
         if(not final):
             plt.clf()
@@ -229,43 +210,6 @@ class Graph(object):
             plt.pause(0.1)
         else:
             plt.show()
-
-    # def printGraph(self):
-    #     """
-    #     print Graph
-    #     """
-    #     plt.clf()
-    #     labels = nx.get_node_attributes(self.graph, 'number')
-    #     colors = nx.get_node_attributes(self.graph, 'color')
-    #     for node in colors:
-    #         if (colors[node] == 'red'):
-    #             colors[node] = 'lightcoral'
-    #         if (colors[node] == 'blue'):
-    #             colors[node] = 'skyblue'
-    #     nx.draw(self.graph, self.pos, node_color=colors.values(), with_lables=True, node_size=250)
-    #     nx.draw_networkx_labels(self.graph, self.pos, labels, font_size=8)
-    #     plt.axis('off')
-    #     plt.show()
-    #
-    # # plt.draw()
-    #
-    # def printGraph_node_only(self):
-    #     """
-    #     print Graph
-    #     """
-    #     plt.clf()
-    #     labels = nx.get_node_attributes(self.graph, 'number')
-    #     colors = nx.get_node_attributes(self.graph, 'color')
-    #     # print colors
-    #     for node in colors:
-    #         if (colors[node] == 'red'):
-    #             colors[node] = 'lightcoral'
-    #         if (colors[node] == 'blue'):
-    #             colors[node] = 'skyblue'
-    #     nx.draw_networkx_nodes(self.graph, self.pos, node_color=colors.values(), with_lables=True, node_size=250)
-    #     nx.draw_networkx_labels(self.graph, self.pos, labels, font_size=8)
-    #     plt.axis('off')
-    #     plt.pause(0.1)
 
     def get_graph(self):
         return self.graph
