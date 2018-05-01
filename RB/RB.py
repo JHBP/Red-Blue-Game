@@ -100,7 +100,7 @@ class RBGame(object):
         selected_node = 'node'
         while True:
             while selected_node.isdigit() == False:
-                selected_node = player.run(self.G,player.color)
+                selected_node = player.run(self.G,player.color,(self.current_turn+1)/2)
 
                 if selected_node == 'print':
                     output = open('graphStatus.json', 'w')
@@ -219,7 +219,7 @@ class RBGame(object):
             first = False
             selected_node = ""
             while not selected_node.isdigit() or (int(selected_node) not in self.G.getValidMoves()):
-                selected_node = self.player.run(self.G, self.player.color)
+                selected_node = self.player.run(self.G, self.player.color, data['round'])
                 if not selected_node.isdigit():
                     print("Invalid input, please select a node")
                 elif int(selected_node) not in self.G.getValidMoves():

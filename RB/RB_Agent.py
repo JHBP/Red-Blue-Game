@@ -8,7 +8,7 @@ import copy
 
 """
 " This is the file one needs to modify.
-" One will be able to write there own algorithm under custom_algorithem.
+" One will be able to write there own algorithm under custom_algorithm.
 " Feel free to make multiple custom algorithms.
 " Parameters for the algorithm are graph and player.
 " Graph is RB_Graph format and player is the string of the player color.
@@ -20,14 +20,14 @@ import copy
 """
 Random algorithm that makes a move randomly
 """
-def RandomAlgorithm(g, player):
+def RandomAlgorithm(g, player, round):
     return str(random.choice(g.getValidMoves()))
 
 
 """
 Simple Greedy Algorithm that looks for the node with the most amount of neighboring nodes.
 """
-def GreedyNodesAlgorithm(g, player):
+def GreedyNodesAlgorithm(g, player, round):
     valid_moves = g.getValidMoves()
     chosen_moves = []
     max_degree = -1
@@ -47,7 +47,7 @@ def GreedyNodesAlgorithm(g, player):
 """
 Greedy Algorithm that considers the amount of nodes gained and the amount of nodes stolen from the opponent
 """
-def GreedyPointsAlgorithm(g, player):
+def GreedyPointsAlgorithm(g, player, round):
     valid_moves = g.getValidMoves()
     chosen_moves = []
     gamestate = nx.get_node_attributes(g.graph, 'color')
@@ -77,9 +77,9 @@ def GreedyPointsAlgorithm(g, player):
 """
 Minimax algorithm
 """
-def MinimaxAlgorithm(g, player):
+def MinimaxAlgorithm(g, player, round):
     m = Minimax(2)
-    return str(m.getAction(g, player))
+    return str(m.getAction(g, player, round))
 
 
 class Minimax():
@@ -90,7 +90,7 @@ class Minimax():
         self.neighbors = None
         self.depth = int(depth)
 
-    def getAction(self, g, player):
+    def getAction(self, g, player, round):
         current_depth = 0
         current_agent = 0
         alpha = -float("inf")
@@ -204,7 +204,7 @@ class Minimax():
         return [gamestate, valid_moves, agent + 1]
 
 
-def CustomAlgorithm(g, player):
+def CustomAlgorithm(g, player, round):
     """
     colors is the dictionary of dictionary.
     Key is a node number and value is a color of the node.
@@ -246,10 +246,10 @@ class computer(object):
     def getColor(self):
         return self.color
 
-    def run(self, graph, color):
+    def run(self, graph, color, round):
         # Choose which algo to run
         if self.makeSelection:
-            return self.algorithm(graph, color)
+            return self.algorithm(graph, color, round)
         else:
             print "Choose an algorithm to use:"
             print "1. Random selection"
@@ -289,7 +289,7 @@ class computer(object):
                     valid_choice = False
                     print("Invalid choice of algorithm")
             self.makeSelection = True
-            return self.algorithm(graph, color)
+            return self.algorithm(graph, color, round)
 
 
 if __name__ == "__main__":
