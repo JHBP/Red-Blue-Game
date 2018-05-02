@@ -303,7 +303,7 @@ if __name__=="__main__":
                         help='connect and play with the server')
     args = parser.parse_args()
 
-    node = 20
+    node = 100
     round = 10
     time = 30
     prob = 0.2
