@@ -306,7 +306,7 @@ if __name__=="__main__":
     node = 100
     round = 10
     time = 30
-    prob = 0.2
+    prob = 0.1
     if args.n:
         node = args.n
     if args.r:
